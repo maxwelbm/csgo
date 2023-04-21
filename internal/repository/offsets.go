@@ -10,7 +10,7 @@ import (
 
 const OffsetsURL string = "https://raw.githubusercontent.com/frk1/hazedumper/master/csgo.json"
 
-func GetNewOffset() (*model.OffSet, error) {
+func GetOffset() (*model.OffSet, error) {
 	resp, err := http.Get(OffsetsURL)
 	if err != nil {
 		return nil, fmt.Errorf("fail to get offset. Error - %v. Using default offsets. Cheat may not work", err)
