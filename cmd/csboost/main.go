@@ -5,7 +5,6 @@ import (
 	"github.com/MaxwelMazur/csboost/internal/repository"
 	"github.com/maxwelbm/gorwmem"
 	"log"
-	"math/rand"
 	"os"
 )
 
@@ -25,23 +24,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	log.Printf("starting ...")
-	log.Printf("launching cheat ......")
-	log.Printf("offset updated ......")
-	log.Printf("running ......")
-
+	log.Printf("Running process ...")
 	go process.Radar(dm, offsets)
 	go process.Wall(dm, offsets)
 	go process.BHop(dm, offsets)
 	go process.Trigger(dm, offsets)
 
 	select {}
-}
-
-func reactionTime() int {
-	num := rand.Intn(84) + 133
-	if float64(num) < 0.7*float64(171-133)+133 {
-		num += rand.Intn(47)
-	}
-	return num
 }

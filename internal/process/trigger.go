@@ -9,23 +9,31 @@ import (
 	"time"
 )
 
-const (
-	VkShift         = 0x10 // https://docs.microsoft.com/en-gb/windows/win32/inputdev/virtual-key-codes
-	VkControl       = 0x11
-	CsgoForceAttack = 0x6
-)
-
 func Trigger(dm *gorwmem.DataManager, offsets *model.OffSet) {
 	for {
 		rtNum := reactionTime()
-		fmt.Printf("\033[2K\rTempo gerado aleatoriamente: %d milisegundos", rtNum)
 		time.Sleep(time.Duration(rtNum) * time.Millisecond)
-		clientAddress, _ := dm.GetModuleFromName("client.dll")
-		if gomem.IsKeyDown(VkShift) || gomem.IsKeyDown(VkControl) {
-			localPlayer, _ := dm.Read(uint((uint32)(clientAddress)+(uint32)(offsets.Signatures.DwLocalPlayer)), gorwmem.UINT)
-			entity, _ := dm.Read(uint(localPlayer.Value.(uint32)+(uint32)(offsets.Netvars.MICrosshairId)), gorwmem.UINT)
+		clientAddress, err := dm.GetModuleFromName("client.dll")
+		if err != nil {
+			fmt.Printf("Failed reading module client.dll. %s", err)
+		}
+		if gomem.IsKeyDown(vkShift) || gomem.IsKeyDown(vkControl) {
+			var localPlayer gorwmem.Data
+			localPlayer, err = dm.Read(uint((uint32)(clientAddress)+(uint32)(offsets.Signatures.DwLocalPlayer)), gorwmem.UINT)
+			if err != nil {
+				fmt.Printf("Failed reading memory localPlayer. %s", err)
+			}
+			var entity gorwmem.Data
+			entity, err = dm.Read(uint(localPlayer.Value.(uint32)+(uint32)(offsets.Netvars.MICrosshairId)), gorwmem.UINT)
+			if err != nil {
+				fmt.Printf("Failed reading memory entity. %s", err)
+			}
 			if entity.Value.(uint32) > 0 && entity.Value.(uint32) <= 64 {
-				dm.Write(uint((uint32)(clientAddress)+(uint32)(offsets.Signatures.DwForceAttack)), gorwmem.Data{Value: CsgoForceAttack, DataType: gorwmem.INT})
+				if err = dm.Write(uint((uint32)(clientAddress)+(uint32)(offsets.Signatures.DwForceAttack)),
+					gorwmem.Data{Value: csgoForceAttack, DataType: gorwmem.INT}); err != nil {
+					fmt.Printf("Failed writing memory. %s", err)
+					continue
+				}
 			}
 		}
 	}

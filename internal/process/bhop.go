@@ -1,25 +1,34 @@
 package process
 
 import (
+	"fmt"
 	"github.com/MaxwelMazur/csboost/internal/model"
 	"github.com/jamesmoriarty/gomem"
 	"github.com/maxwelbm/gorwmem"
 )
 
-const (
-	VkSpace        = 0x20   // https://docs.microsoft.com/en-gb/windows/win32/inputdev/virtual-key-codes
-	CsgoFlOnGround = 1 << 0 // https://github.com/ValveSoftware/source-sdk-2013/blob/master/mp/src/public/const.h
-	CsgoForceJump  = 0x6    // https://github.com/ValveSoftware/source-sdk-2013/blob/0d8dceea4310fde5706b3ce1c70609d72a38efdf/sp/src/game/shared/sdk/sdk_playeranimstate.cpp#L517
-)
-
 func BHop(dm *gorwmem.DataManager, offsets *model.OffSet) {
 	for {
-		clientAddress, _ := dm.GetModuleFromName("client.dll")
-		if gomem.IsKeyDown(VkSpace) {
-			localPlayer, _ := dm.Read(uint((uint32)(clientAddress)+(uint32)(offsets.Signatures.DwLocalPlayer)), gorwmem.UINT)
-			flags, _ := dm.Read(uint(localPlayer.Value.(uint32)+(uint32)(offsets.Netvars.MFFlags)), gorwmem.UINT)
-			if (flags.Value.(uint32) & CsgoFlOnGround) > 0 {
-				dm.Write(uint((uint32)(clientAddress)+(uint32)(offsets.Signatures.DwForceJump)), gorwmem.Data{Value: CsgoForceJump, DataType: gorwmem.INT})
+		clientAddress, err := dm.GetModuleFromName("client.dll")
+		if err != nil {
+			fmt.Printf("Failed reading module client.dll. %s", err)
+		}
+		if gomem.IsKeyDown(vkSpace) {
+			var localPlayer gorwmem.Data
+			localPlayer, err = dm.Read(uint((uint32)(clientAddress)+(uint32)(offsets.Signatures.DwLocalPlayer)), gorwmem.UINT)
+			if err != nil {
+				fmt.Printf("Failed reading memory in local player. %s", err)
+			}
+			var flags gorwmem.Data
+			flags, err = dm.Read(uint(localPlayer.Value.(uint32)+(uint32)(offsets.Netvars.MFFlags)), gorwmem.UINT)
+			if err != nil {
+				fmt.Printf("Failed reading memory in flags. %s", err)
+			}
+			if (flags.Value.(uint32) & csgoFlOnGround) > 0 {
+				if err = dm.Write(uint((uint32)(clientAddress)+(uint32)(offsets.Signatures.DwForceJump)),
+					gorwmem.Data{Value: csgoForceJump, DataType: gorwmem.INT}); err != nil {
+					fmt.Printf("Failed reading memory in flags. %s", err)
+				}
 			}
 		}
 	}
