@@ -1,8 +1,10 @@
 github.com/Xustyx/w32 v0.0.0-20160511232645-7f628311f4e8 h1:BygsECN5sbNhkUdQkWPLtpwpRjDIEl14vBxc73BSaTo=
 github.com/Xustyx/w32 v0.0.0-20160511232645-7f628311f4e8/go.mod h1:+7E94MV3Uy+A41SLtlKYxudwdTFBUGuXqhLbe0/iuHQ=
-github.com/aditkumar1/goxymemory v0.0.0-20220207062455-ede630a7c773 h1:VGgqbV7fVWIRbqH7OkAXjJAj0UvJ0MwkeO2IqzMGIcw=
-github.com/aditkumar1/goxymemory v0.0.0-20220207062455-ede630a7c773/go.mod h1:HudUVshLKuDVfr3O1yY8KqPos1XCOOOGnjQFDI0TQKg=
 github.com/jamesmoriarty/gomem v1.0.0 h1:nDpWzE/XhUCIp9tBW4f5sw2K1aabeCQdedwPH8ZQUms=
 github.com/jamesmoriarty/gomem v1.0.0/go.mod h1:PUhkYqg17uDRQs52DoBRalN8LgJ/qPb4gjy4mjSzh5E=
 github.com/maxwelbm/gorwmem v0.0.0-20230421024011-52dca51430b9 h1:ubaJUdve2BKsqHseQX/rPFEy0OgmQMEIlNSVC6DcZqg=
 github.com/maxwelbm/gorwmem v0.0.0-20230421024011-52dca51430b9/go.mod h1:L8AAFO96H/iL7iMW4GAnYqhF9soBzQHpvfl5YlEDZOo=
+github.com/maxwelbm/gorwmem v0.0.0-20230424152351-8ef040cd4fe4 h1:Xr5NbOJx5JvbBxk4Hmpl6qZL0x8rG+ib3zQ9GloVso4=
+github.com/maxwelbm/gorwmem v0.0.0-20230424152351-8ef040cd4fe4/go.mod h1:e7DiIjEIwZL0aXW1NC6ZDTXNsB2bbV3Nv2Yj7dzIZg0=
+github.com/maxwelbm/gorwmem v0.0.0-20230425204801-3a4083c70ea3 h1:5OngMesVLruv58ATYcffcFYBNd6zSJ5Bu2qpYq5UdSY=
+github.com/maxwelbm/gorwmem v0.0.0-20230425204801-3a4083c70ea3/go.mod h1:e7DiIjEIwZL0aXW1NC6ZDTXNsB2bbV3Nv2Yj7dzIZg0=

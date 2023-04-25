@@ -13,26 +13,26 @@ func Wall(dm *gorwmem.DataManager, offsets *model.OffSet) {
 			fmt.Printf("Failed reading module client.dll. %s", err)
 		}
 		var glowManager gorwmem.Data
-		glowManager, err = dm.Read(uint(clientAddress)+offsets.Signatures.DwGlowObjectManager, gorwmem.UINT)
+		glowManager, err = dm.Read(uint(clientAddress)+offsets.Signatures.DwGlowObjectManager, 0, gorwmem.UINT)
 		if err != nil {
 			fmt.Printf("Failed reading memory glowManager. %s", err)
 		}
 		for i := 1; i < 64; i++ {
 			var entity gorwmem.Data
-			entity, err = dm.Read((uint)(clientAddress)+(offsets.Signatures.DwEntityList+(uint)(i*0x10)), gorwmem.UINT)
+			entity, err = dm.Read((uint)(clientAddress)+(offsets.Signatures.DwEntityList+(uint)(i*0x10)), 0, gorwmem.UINT)
 			if err != nil {
 				fmt.Printf("Failed reading memory entity. %s", err)
 			}
 			if entity.Value.(uint32) > 0 {
 
 				var entityTeamId gorwmem.Data
-				entityTeamId, err = dm.Read(uint(entity.Value.(uint32))+offsets.Netvars.MITeamNum, gorwmem.UINT)
+				entityTeamId, err = dm.Read(uint(entity.Value.(uint32))+offsets.Netvars.MITeamNum, 0, gorwmem.UINT)
 				if err != nil {
 					fmt.Printf("Failed reading memory entityTeamId. %s", err)
 				}
 
 				var entityGlow gorwmem.Data
-				entityGlow, err = dm.Read(uint(entity.Value.(uint32))+offsets.Netvars.MIGlowIndex, gorwmem.UINT)
+				entityGlow, err = dm.Read(uint(entity.Value.(uint32))+offsets.Netvars.MIGlowIndex, 0, gorwmem.UINT)
 				if err != nil {
 					fmt.Printf("Failed reading memory entityGlow. %s", err)
 				}

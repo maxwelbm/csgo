@@ -3,7 +3,6 @@ package process
 import (
 	"fmt"
 	"github.com/MaxwelMazur/csboost/internal/model"
-	"github.com/jamesmoriarty/gomem"
 	"github.com/maxwelbm/gorwmem"
 )
 
@@ -13,14 +12,14 @@ func BHop(dm *gorwmem.DataManager, offsets *model.OffSet) {
 		if err != nil {
 			fmt.Printf("Failed reading module client.dll. %s", err)
 		}
-		if gomem.IsKeyDown(vkSpace) {
+		if gorwmem.IsKeyDown(vkSpace) {
 			var localPlayer gorwmem.Data
-			localPlayer, err = dm.Read(uint((uint32)(clientAddress)+(uint32)(offsets.Signatures.DwLocalPlayer)), gorwmem.UINT)
+			localPlayer, err = dm.Read(uint((uint32)(clientAddress)+(uint32)(offsets.Signatures.DwLocalPlayer)), 0, gorwmem.UINT)
 			if err != nil {
 				fmt.Printf("Failed reading memory in local player. %s", err)
 			}
 			var flags gorwmem.Data
-			flags, err = dm.Read(uint(localPlayer.Value.(uint32)+(uint32)(offsets.Netvars.MFFlags)), gorwmem.UINT)
+			flags, err = dm.Read(uint(localPlayer.Value.(uint32)+(uint32)(offsets.Netvars.MFFlags)), 0, gorwmem.UINT)
 			if err != nil {
 				fmt.Printf("Failed reading memory in flags. %s", err)
 			}

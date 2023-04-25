@@ -25,10 +25,12 @@ func main() {
 	}
 
 	log.Printf("Running process ...")
+
 	go process.Radar(dm, offsets)
 	go process.Wall(dm, offsets)
 	go process.BHop(dm, offsets)
 	go process.Trigger(dm, offsets)
+	go process.SkinChanger(dm, offsets)
 
 	select {}
 }

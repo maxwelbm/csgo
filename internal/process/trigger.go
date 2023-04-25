@@ -3,7 +3,6 @@ package process
 import (
 	"fmt"
 	"github.com/MaxwelMazur/csboost/internal/model"
-	"github.com/jamesmoriarty/gomem"
 	"github.com/maxwelbm/gorwmem"
 	"math/rand"
 	"time"
@@ -17,14 +16,14 @@ func Trigger(dm *gorwmem.DataManager, offsets *model.OffSet) {
 		if err != nil {
 			fmt.Printf("Failed reading module client.dll. %s", err)
 		}
-		if gomem.IsKeyDown(vkShift) || gomem.IsKeyDown(vkControl) {
+		if gorwmem.IsKeyDown(vkShift) || gorwmem.IsKeyDown(vkControl) {
 			var localPlayer gorwmem.Data
-			localPlayer, err = dm.Read(uint((uint32)(clientAddress)+(uint32)(offsets.Signatures.DwLocalPlayer)), gorwmem.UINT)
+			localPlayer, err = dm.Read(uint((uint32)(clientAddress)+(uint32)(offsets.Signatures.DwLocalPlayer)), 0, gorwmem.UINT)
 			if err != nil {
 				fmt.Printf("Failed reading memory localPlayer. %s", err)
 			}
 			var entity gorwmem.Data
-			entity, err = dm.Read(uint(localPlayer.Value.(uint32)+(uint32)(offsets.Netvars.MICrosshairId)), gorwmem.UINT)
+			entity, err = dm.Read(uint(localPlayer.Value.(uint32)+(uint32)(offsets.Netvars.MICrosshairId)), 0, gorwmem.UINT)
 			if err != nil {
 				fmt.Printf("Failed reading memory entity. %s", err)
 			}

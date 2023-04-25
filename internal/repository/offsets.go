@@ -15,7 +15,12 @@ func GetOffset() (*model.OffSet, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail to get offset. Error - %v. Using default offsets. Cheat may not work", err)
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err = Body.Close()
+		if err != nil {
+
+		}
+	}(resp.Body)
 
 	strBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
