@@ -5,13 +5,12 @@ import (
 	"github.com/MaxwelMazur/csboost/internal/model"
 	"github.com/maxwelbm/gorwmem"
 	"math/rand"
-	"time"
 )
 
 func Trigger(dm *gorwmem.DataManager, offsets *model.OffSet) {
 	for {
-		rtNum := reactionTime()
-		time.Sleep(time.Duration(rtNum) * time.Millisecond)
+		//rtNum := reactionTime()
+		//time.Sleep(time.Duration(rtNum) * time.Millisecond)
 		clientAddress, err := dm.GetModuleFromName("client.dll")
 		if err != nil {
 			fmt.Printf("Failed reading module client.dll. %s", err)

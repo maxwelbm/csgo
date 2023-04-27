@@ -1,0 +1,68 @@
+name: Release
+
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+jobs:
+  release:
+    runs-on: macos-latest
+
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+
+    steps:
+      - uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+        id: create_release
+
+      - id: get_version
+        run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
+
+  build:
+    strategy:
+      matrix:
+        target:
+          - os: 'windows-latest'
+            goos: 'windows'
+            goarch: 'amd64'
+            ext: '.exe'
+        go: [ '1.20' ]
+
+    runs-on: ${{ matrix.target.os }}
+
+    needs: [ release ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-go@v1
+        with:
+          go-version: ${{ matrix.go }}
+      - run: |
+          git rev-parse --short HEAD | Tee-Object -Variable VERSION
+          Get-Date -format yyyyMMdd.HHmmss | Tee-Object -Variable DATE
+
+          go build -v -ldflags "-X github.com/maxwelbm/csboost.Version=$VERSION -X github.com/maxwelbm/csboost.Date=$DATE" -o ${{ matrix.target.goos }}-${{ matrix.target.goarch }}${{ matrix.target.ext }} cmd/csboost/main.go
+        env:
+          GOOS: ${{ matrix.target.goos }}
+          GOARCH: ${{ matrix.target.goarch }}
+          CGO_ENABLED: 1
+
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release.outputs.upload_url}}
+          asset_path: ./${{ matrix.target.goos }}-${{ matrix.target.goarch }}${{ matrix.target.ext }}
+          asset_name: csboost_${{ needs.release.outputs.version }}_${{ matrix.target.goos }}-${{ matrix.target.goarch }}${{ matrix.target.ext }}
+          asset_content_type: application/zip
